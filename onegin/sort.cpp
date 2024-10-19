@@ -7,13 +7,12 @@
 void readFile(char ***str, size_t *SIZE, size_t *row_count);
 void resultOfReadFile(char **str, size_t SIZE);
 int mySrtcmpFromLeft(const char *pstr1, const char *pstr2);
-void bubbleSort(char **str, size_t size);
+void bubbleSort(char **str, size_t size, int (*sort)(const char *, const char *));
 void oneginSortedFile(char **str, size_t SIZE);
 void printfSortedText(char **str, size_t SIZE);
 
-// void bubbleSortFromRight(char **str, size_t SIZE);
-// void oneginSortedFileFromRight(char **str, size_t SIZE);
-// int myStrcmpFromRight(const char *pstr1, const char *pstr2);
+void oneginSortedFileFromRight(char **str, size_t SIZE);
+int myStrcmpFromRight(const char *pstr1, const char *pstr2);
 
 
 int main()
@@ -28,9 +27,11 @@ int main()
 
     resultOfReadFile(str, SIZE);
 
-    bubbleSort(str, SIZE);
+    bubbleSort(str, SIZE, mySrtcmpFromLeft);
+    bubbleSort(str, SIZE, myStrcmpFromRight);
 
     oneginSortedFile(str, SIZE);
+    oneginSortedFileFromRight(str, SIZE);
 
     printfSortedText(str, SIZE);
 
@@ -104,13 +105,67 @@ int mySrtcmpFromLeft(const char *pstr1, const char *pstr2)
     return pstr1[i] - pstr2[j];
 }
 
-void bubbleSort(char **str, size_t SIZE)
+int myStrcmpFromRight(const char *pstr1, const char *pstr2)
+{
+    size_t i = strlen(pstr1) - 1, j = strlen(pstr2) - 1;
+
+    while (pstr1[i] != '\0')
+    {
+        while (pstr1[i] != '\0' && isalnum((unsigned char)pstr1[i]))
+        {
+            if (i == 0)
+                break;
+            i--;
+            fprintf(stderr, "i = %zu ", i);
+        }
+
+
+        while (pstr2[j] != '\0' && isalnum((unsigned char)pstr2[j]))
+        {
+            if (j == 0)
+                break;
+            j--;
+            fprintf(stderr, "j = %zu ", j);
+
+        }
+
+        char ch1 = (char)tolower((unsigned char)pstr1[i]);
+        char ch2 = (char)tolower((unsigned char)pstr2[j]);
+
+        if (ch1 != ch2)
+            break;
+
+        i--;
+        j--;
+    }
+
+    return pstr1[i] - pstr2[j];
+}
+
+// void bubbleSort(char **str, size_t SIZE)
+// {
+//     for (size_t i = 0; i < SIZE - 1; i++)
+//     {
+//         for (size_t j = 0; j < SIZE - i - 1; j++)
+//         {
+//             int res = mySrtcmpFromLeft(str[j], str[j + 1]);
+//             if (res > 0)
+//             {
+//                 char* buffer = str[j];
+//                 str[j] = str[j + 1];
+//                 str[j + 1] = buffer;
+//             }
+//         }
+//     }
+// }
+
+void bubbleSort(char **str, size_t SIZE, int (*sort)(const char *, const char *))
 {
     for (size_t i = 0; i < SIZE - 1; i++)
     {
         for (size_t j = 0; j < SIZE - i - 1; j++)
         {
-            int res = mySrtcmpFromLeft(str[j], str[j + 1]);
+            int res = sort(str[j], str[j + 1]);
             if (res > 0)
             {
                 char* buffer = str[j];
@@ -120,7 +175,6 @@ void bubbleSort(char **str, size_t SIZE)
         }
     }
 }
-
 
 void oneginSortedFile(char **str, size_t SIZE)
 {
@@ -133,6 +187,16 @@ void oneginSortedFile(char **str, size_t SIZE)
     fclose(fp);
 }
 
+void oneginSortedFileFromRight(char **str, size_t SIZE)
+{
+    FILE *fp = fopen("onegin_sorted_from_right.txt", "w");
+    assert(fp != NULL);
+    for (size_t j = 0; j < SIZE; j++)
+    {
+        fprintf(fp, "%s\n", str[j]);
+    }
+    fclose(fp);
+}
 
 void printfSortedText(char **str, size_t SIZE)
 {
@@ -146,14 +210,19 @@ void printfSortedText(char **str, size_t SIZE)
 }
 
 
+
+
+
+
+
 #if 0
-void bubbleSortFromRight(char **str, size_t SIZE)
+void bubbleSort(char **str, size_t SIZE, int (sort*)(const char *, const char *))
 {
     for (size_t i = 0; i < SIZE - 1; i++)
     {
         for (size_t j = 0; j < SIZE - i - 1; j++)
         {
-            int res = myStrcmpFromRight(str[j], str[j + 1]);
+            int res = sort(str[j], str[j + 1]);
             if (res > 0)
             {
                 char* buffer = str[j];
@@ -184,9 +253,9 @@ int myStrcmpFromRight(char *pstr1, char *pstr2)
     while (*pstr1[i] != '\0')
     {
         while (pstr1[i] != '\0' && isalnum((unsigned char)pstr1[i]))
-            i++;
+            i--;
         while (pstr2[j] != '\0' && isalnum((unsigned char)pstr2[j]))
-            j++;
+            j--;
 
         char ch1 = (char)tolower((unsigned char)pstr1[i]);
         char ch2 = (char)tolower((unsigned char)pstr2[j]);
@@ -198,7 +267,7 @@ int myStrcmpFromRight(char *pstr1, char *pstr2)
         j--;
     }
 
-    return ch1 - ch2;;
+    return pstr1[i] - pstr2[j];
 }
 
 #endif
