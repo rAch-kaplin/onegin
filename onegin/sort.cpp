@@ -6,11 +6,14 @@
 
 void readFile(char ***str, size_t *SIZE, size_t *row_count);
 void resultOfReadFile(char **str, size_t SIZE);
-int my_strcmp(const char *pstr1, const char *pstr2);
+int mySrtcmpFromLeft(const char *pstr1, const char *pstr2);
 void bubbleSort(char **str, size_t size);
 void oneginSortedFile(char **str, size_t SIZE);
 void printfSortedText(char **str, size_t SIZE);
 
+// void bubbleSortFromRight(char **str, size_t SIZE);
+// void oneginSortedFileFromRight(char **str, size_t SIZE);
+// int myStrcmpFromRight(const char *pstr1, const char *pstr2);
 
 
 int main()
@@ -77,29 +80,28 @@ void resultOfReadFile(char **str, size_t SIZE)
     putchar('\n');
 }
 
-int my_strcmp(const char *pstr1, const char *pstr2)
+int mySrtcmpFromLeft(const char *pstr1, const char *pstr2)
 {
     int i = 0, j = 0;
-    while(1)
+
+    while (pstr1[i] != '\0')
     {
-        while(pstr1[i] != '\0' && !isalnum((unsigned char)pstr1[i]))
+        while (pstr1[i] != '\0' && !isalnum((unsigned char)pstr1[i]))
             i++;
-        while(pstr2[j] != '\0' && !isalnum((unsigned char)pstr2[j]))
+        while (pstr2[j] != '\0' && !isalnum((unsigned char)pstr2[j]))
             j++;
 
-        char ch1 = (pstr1[i] != '\0') ? (char)tolower((unsigned char)pstr1[i]) : '\0';
-        char ch2 = (pstr2[j] != '\0') ? (char)tolower((unsigned char)pstr2[j]) : '\0';
+        char ch1 = (char)tolower((unsigned char)pstr1[i]);
+        char ch2 = (char)tolower((unsigned char)pstr2[j]);
 
-        if (ch1 == ch2)
-        {
-            if(ch1 == '\0')
-                return 0;
-            i++;
-            j++;
-        }
-        else
-            return ch1 - ch2;
+        if (ch1 != ch2)
+            break;
+
+        i++;
+        j++;
     }
+
+    return pstr1[i] - pstr2[j];
 }
 
 void bubbleSort(char **str, size_t SIZE)
@@ -108,7 +110,7 @@ void bubbleSort(char **str, size_t SIZE)
     {
         for (size_t j = 0; j < SIZE - i - 1; j++)
         {
-            int res = my_strcmp(str[j], str[j + 1]);
+            int res = mySrtcmpFromLeft(str[j], str[j + 1]);
             if (res > 0)
             {
                 char* buffer = str[j];
@@ -119,9 +121,10 @@ void bubbleSort(char **str, size_t SIZE)
     }
 }
 
+
 void oneginSortedFile(char **str, size_t SIZE)
 {
-    FILE *fp = fopen("onegin_sorted.txt", "w");
+    FILE *fp = fopen("onegin_sorted_from_left.txt", "w");
     assert(fp != NULL);
     for (size_t j = 0; j < SIZE; j++)
     {
@@ -129,6 +132,7 @@ void oneginSortedFile(char **str, size_t SIZE)
     }
     fclose(fp);
 }
+
 
 void printfSortedText(char **str, size_t SIZE)
 {
@@ -140,3 +144,61 @@ void printfSortedText(char **str, size_t SIZE)
     }
     free(str);
 }
+
+
+#if 0
+void bubbleSortFromRight(char **str, size_t SIZE)
+{
+    for (size_t i = 0; i < SIZE - 1; i++)
+    {
+        for (size_t j = 0; j < SIZE - i - 1; j++)
+        {
+            int res = myStrcmpFromRight(str[j], str[j + 1]);
+            if (res > 0)
+            {
+                char* buffer = str[j];
+                str[j] = str[j + 1];
+                str[j + 1] = buffer;
+            }
+        }
+    }
+}
+
+
+void oneginSortedFileFromRight(char **str, size_t SIZE)
+{
+    FILE *fp = fopen("onegin_sorted_from_right.txt", "w");
+    assert(fp != NULL);
+    for (size_t j = 0; j < SIZE; j++)
+    {
+        fprintf(fp, "%s\n", str[j]);
+    }
+    fclose(fp);
+}
+
+
+int myStrcmpFromRight(char *pstr1, char *pstr2)
+{
+    size_t i = strlen(*pstr1) - 1, j = strlen(*pstr2) - 1;
+
+    while (*pstr1[i] != '\0')
+    {
+        while (pstr1[i] != '\0' && isalnum((unsigned char)pstr1[i]))
+            i++;
+        while (pstr2[j] != '\0' && isalnum((unsigned char)pstr2[j]))
+            j++;
+
+        char ch1 = (char)tolower((unsigned char)pstr1[i]);
+        char ch2 = (char)tolower((unsigned char)pstr2[j]);
+
+        if (ch1 != ch2)
+            break;
+
+        i--;
+        j--;
+    }
+
+    return ch1 - ch2;;
+}
+
+#endif
