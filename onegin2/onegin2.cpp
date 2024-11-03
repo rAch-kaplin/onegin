@@ -4,7 +4,8 @@
 #include <string.h>
 #include <assert.h>
 
-void readFile(char ***str, size_t *SIZE);
+//void readFile(char ***str, size_t *SIZE);
+void readFile(char **file_content, char ***str, size_t *SIZE);
 void resultOfReadFile(char **str, size_t SIZE);
 int mySrtcmpFromLeft(const char *pstr1, const char *pstr2);
 void bubbleSort(char **str, size_t size, int (*sort)(const char *, const char *));
@@ -19,12 +20,12 @@ void printfSortedTextFromRight(char **str, size_t SIZE);
 int main()
 {
     size_t SIZE = 0;
-    //size_t row_count = 10;
 
+    char *file_content = NULL;
     char **str = NULL;
-    //assert(str != NULL);
 
-    readFile(&str, &SIZE);
+
+    readFile(&file_content, &str, &SIZE);
 
     resultOfReadFile(str, SIZE);
 
@@ -36,13 +37,13 @@ int main()
     oneginSortedFileFromLeft(str, SIZE);
     printfSortedText(str, SIZE);
 
-    free(str[0]);
+    free(file_content);
     free(str);
 
     return 0;
 }
 
-void readFile(char ***str, size_t *SIZE)
+void readFile(char **file_content, char ***str, size_t *SIZE)
 {
     FILE * file = fopen("onegin.txt", "r");
     assert(file != NULL);
@@ -52,17 +53,17 @@ void readFile(char ***str, size_t *SIZE)
     fseek(file, 0, SEEK_SET);
     printf("---SIZE_OF_FILE = %zu\n", size_of_file);
 
-    char * file_content = (char*)calloc(size_of_file + 1, sizeof(char));
-    assert(file_content != NULL);
+    *file_content = (char*)calloc(size_of_file + 1, sizeof(char));
+    assert(*file_content != NULL);
 
-    fread(file_content, sizeof(char), size_of_file, file);
+    fread(*file_content, sizeof(char), size_of_file, file);
     fclose(file);
 
     for (size_t i = 0; i < size_of_file; i++)
     {
-        if (file_content[i] == '\n')
+        if ((*file_content)[i] == '\n')
         {
-            file_content[i] = '\0';
+            (*file_content)[i] = '\0';
             (*SIZE)++;
         }
     }
@@ -74,11 +75,11 @@ void readFile(char ***str, size_t *SIZE)
     assert(*str != NULL);
 
     size_t line_index = 0;
-    (*str)[line_index++] = file_content;
+    (*str)[line_index++] = *file_content;
     for (size_t i = 0; i < size_of_file; i++)
     {
-        if (file_content[i] == '\0' && i + 1 < size_of_file)
-            (*str)[line_index++] = &file_content[i + 1];
+        if ((*file_content)[i] == '\0' && i + 1 < size_of_file)
+            (*str)[line_index++] = &(*file_content)[i + 1];
     }
 }
 
