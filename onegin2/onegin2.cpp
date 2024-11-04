@@ -4,46 +4,51 @@
 #include <string.h>
 #include <assert.h>
 
-//void readFile(char ***str, size_t *SIZE);
-void readFile(char **file_content, char ***str, size_t *SIZE);
-void resultOfReadFile(char **str, size_t SIZE);
-int mySrtcmpFromLeft(const char *pstr1, const char *pstr2);
-void bubbleSort(char **str, size_t size, int (*sort)(const char *, const char *));
-void oneginSortedFileFromLeft(char **str, size_t SIZE);
-void printfSortedText(char **str, size_t SIZE);
+typedef struct
+{
+    char **lines;
+    size_t SIZE;
+} FileData;
 
-void oneginSortedFileFromRight(char **str, size_t SIZE);
+void readFile(char **file_content, FileData *file_data);
+void resultOfReadFile(const FileData *file_data);
+int mySrtcmpFromLeft(const char *pstr1, const char *pstr2);
+void bubbleSort(const FileData *file_data, int (*sort)(const char *, const char *));
+void oneginSortedFileFromLeft(const FileData *file_data);
+void printfSortedText(const FileData *file_data);
+void swap(char ** str1, char **str2);
+
+void oneginSortedFileFromRight(const FileData *file_data);
 int myStrcmpFromRight(const char *pstr1, const char *pstr2);
-void printfSortedTextFromRight(char **str, size_t SIZE);
+void printfSortedTextFromRight(const FileData *file_data);
 
 
 int main()
 {
-    size_t SIZE = 0;
+    //size_t SIZE = 0;
 
     char *file_content = NULL;
-    char **str = NULL;
+    FileData file_data = {0};
 
+    readFile(&file_content, &file_data);
 
-    readFile(&file_content, &str, &SIZE);
+    resultOfReadFile(&file_data);
 
-    resultOfReadFile(str, SIZE);
+    bubbleSort(&file_data, myStrcmpFromRight);
+    oneginSortedFileFromRight(&file_data);
+    printfSortedTextFromRight(&file_data);
 
-    bubbleSort(str, SIZE, myStrcmpFromRight);
-    oneginSortedFileFromRight(str, SIZE);
-    printfSortedTextFromRight(str, SIZE);
-
-    bubbleSort(str, SIZE, mySrtcmpFromLeft);
-    oneginSortedFileFromLeft(str, SIZE);
-    printfSortedText(str, SIZE);
+    bubbleSort(&file_data, mySrtcmpFromLeft);
+    oneginSortedFileFromLeft(&file_data);
+    printfSortedText(&file_data);
 
     free(file_content);
-    free(str);
+    free(file_data.lines);
 
     return 0;
 }
 
-void readFile(char **file_content, char ***str, size_t *SIZE)
+void readFile(char **file_content, FileData *file_data)
 {
     FILE * file = fopen("onegin.txt", "r");
     assert(file != NULL);
@@ -56,7 +61,11 @@ void readFile(char **file_content, char ***str, size_t *SIZE)
     *file_content = (char*)calloc(size_of_file + 1, sizeof(char));
     assert(*file_content != NULL);
 
-    fread(*file_content, sizeof(char), size_of_file, file);
+    if (fread(*file_content, sizeof(char), size_of_file, file) != size_of_file)
+    {
+        fputs("Error reading file", stderr);
+        exit(3);
+    }
     fclose(file);
 
     for (size_t i = 0; i < size_of_file; i++)
@@ -64,35 +73,36 @@ void readFile(char **file_content, char ***str, size_t *SIZE)
         if ((*file_content)[i] == '\n')
         {
             (*file_content)[i] = '\0';
-            (*SIZE)++;
+            file_data->SIZE++;
         }
     }
 
 
-    printf("nStrings = %zu\n", *SIZE);
+    printf("nStrings = %zu\n", file_data->SIZE);
 
-    *str = (char**)calloc(*SIZE + 1, sizeof(char*));
-    assert(*str != NULL);
+    file_data->lines = (char**)calloc(file_data->SIZE + 1, sizeof(char*));
+    assert(file_data->lines != NULL);
 
     size_t line_index = 0;
-    (*str)[line_index++] = *file_content;
+    (file_data->lines)[line_index++] = *file_content;
     for (size_t i = 0; i < size_of_file; i++)
     {
         if ((*file_content)[i] == '\0' && i + 1 < size_of_file)
-            (*str)[line_index++] = &(*file_content)[i + 1];
+            (file_data->lines)[line_index++] = &(*file_content)[i + 1];
     }
 }
 
-void resultOfReadFile(char **str, size_t SIZE)
+void resultOfReadFile(const FileData *file_data)
 {
-    printf("SIZE = <<%zu>>\n\n", SIZE);
+    printf("SIZE = <<%zu>>\n\n", file_data->SIZE);
     puts("Содержимое считанного файла:\n");
-    for (size_t j = 0; j < SIZE; j++)
+    for (size_t j = 0; j < file_data->SIZE; j++)
     {
-        printf("---%s\n", str[j]);
+        printf("---%s\n", file_data->lines[j]);
     }
     putchar('\n');
 }
+
 
 int mySrtcmpFromLeft(const char *pstr1, const char *pstr2)
 {
@@ -155,60 +165,65 @@ int myStrcmpFromRight(const char *pstr1, const char *pstr2)
     return pstr1[i] - pstr2[j];
 }
 
-void bubbleSort(char **str, size_t SIZE, int (*sort)(const char *, const char *))
+void swap(char ** str1, char **str2)
 {
-    for (size_t i = 0; i < SIZE - 1; i++)
+    char *buffer = *str1;
+    *str1 = *str2;
+    *str2 = buffer;
+}
+
+void bubbleSort(const FileData *file_data, int (*sort)(const char *, const char *))
+{
+    for (size_t i = 0; i < file_data->SIZE - 1; i++)
     {
-        for (size_t j = 0; j < SIZE - i - 1; j++)
+        for (size_t j = 0; j < file_data->SIZE - i - 1; j++)
         {
-            int res = sort(str[j], str[j + 1]);
+            int res = sort(file_data->lines[j], file_data->lines[j + 1]);
             if (res > 0)
             {
-                char* buffer = str[j];
-                str[j] = str[j + 1];
-                str[j + 1] = buffer;
+                swap(&(file_data->lines)[j], &(file_data->lines)[j + 1]);
             }
         }
     }
 }
 
-void oneginSortedFileFromLeft(char **str, size_t SIZE)
+void oneginSortedFileFromLeft(const FileData *file_data)
 {
     FILE *fp = fopen("onegin_sorted_from_left.txt", "w");
     assert(fp != NULL);
-    for (size_t j = 0; j < SIZE; j++)
+    for (size_t j = 0; j < file_data->SIZE; j++)
     {
-        fprintf(fp, "%s\n", str[j]);
+        fprintf(fp, "%s\n", file_data->lines[j]);
     }
     fclose(fp);
 }
 
-void oneginSortedFileFromRight(char **str, size_t SIZE)
+void oneginSortedFileFromRight(const FileData *file_data)
 {
     FILE *fp = fopen("onegin_sorted_from_right.txt", "w");
     assert(fp != NULL);
-    for (size_t j = 0; j < SIZE; j++)
+    for (size_t j = 0; j < file_data->SIZE; j++)
     {
-        fprintf(fp, "%s\n", str[j]);
+        fprintf(fp, "%s\n", file_data->lines[j]);
     }
     fclose(fp);
 }
 
-void printfSortedTextFromRight(char **str, size_t SIZE)
+void printfSortedTextFromRight(const FileData *file_data)
 {
     puts("Отсортированный текст from right:\n");
-    for (size_t j = 0; j < SIZE; j++)
+    for (size_t j = 0; j < file_data->SIZE; j++)
     {
-        printf("%s\n", str[j]);
+        printf("%s\n", file_data->lines[j]);
     }
     putchar('\n');
 }
 
-void printfSortedText(char **str, size_t SIZE)
+void printfSortedText(const FileData *file_data)
 {
     puts("Отсортированный текст from left:\n");
-    for (size_t j = 0; j < SIZE; j++)
+    for (size_t j = 0; j < file_data->SIZE; j++)
     {
-        printf("%s\n", str[j]);
+        printf("%s\n", file_data->lines[j]);
     }
 }
