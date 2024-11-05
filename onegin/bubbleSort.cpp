@@ -1,18 +1,23 @@
 #include <stddef.h>
 #include "bubbleSort.h"
 
-void bubbleSort(char **str, size_t SIZE, int (*sort)(const char *, const char *))
+void swap(char ** str1, char **str2)
 {
-    for (size_t i = 0; i < SIZE - 1; i++)
+    char *buffer = *str1;
+    *str1 = *str2;
+    *str2 = buffer;
+}
+
+void bubbleSort(const FileData *file_data, int (*sort)(const char *, const char *))
+{
+    for (size_t i = 0; i < file_data->SIZE - 1; i++)
     {
-        for (size_t j = 0; j < SIZE - i - 1; j++)
+        for (size_t j = 0; j < file_data->SIZE - i - 1; j++)
         {
-            int res = sort(str[j], str[j + 1]);
+            int res = sort(file_data->lines[j], file_data->lines[j + 1]);
             if (res > 0)
             {
-                char* buffer = str[j];
-                str[j] = str[j + 1];
-                str[j + 1] = buffer;
+                swap(&(file_data->lines)[j], &(file_data->lines)[j + 1]);
             }
         }
     }

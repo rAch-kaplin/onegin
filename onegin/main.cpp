@@ -9,25 +9,33 @@
 #include "bubbleSort.h"
 #include "printf_sorted_text.h"
 
+// typedef struct
+// {
+//     char **lines;
+//     size_t SIZE;
+// } FileData;
+
 int main()
 {
-    size_t SIZE = 0;
-    size_t row_count = 10;
+    //size_t SIZE = 0;
 
-    char **str = (char**)calloc(row_count, sizeof(char*));
-    assert(str != NULL);
+    char *file_content = NULL;
+    FileData file_data = {0};
 
-    readFile(&str, &SIZE, &row_count);
+    readFile(&file_content, &file_data);
 
-    resultOfReadFile(str, SIZE);
+    resultOfReadFile(&file_data);
 
-    bubbleSort(str, SIZE, myStrcmpFromRight);
-    oneginSortedFileFromRight(str, SIZE);
-    printfSortedTextFromRight(str, SIZE);
+    bubbleSort(&file_data, myStrcmpFromRight);
+    oneginSortedFileFromRight(&file_data);
+    printfSortedTextFromRight(&file_data);
 
-    bubbleSort(str, SIZE, mySrtcmpFromLeft);
-    oneginSortedFileFromLeft(str, SIZE);
-    printfSortedText(str, SIZE);
+    bubbleSort(&file_data, mySrtcmpFromLeft);
+    oneginSortedFileFromLeft(&file_data);
+    printfSortedText(&file_data);
+
+    free(file_content);
+    free(file_data.lines);
 
     return 0;
 }

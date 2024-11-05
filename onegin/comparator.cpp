@@ -5,8 +5,6 @@
 #include "comparator.h"
 
 
-
-
 int mySrtcmpFromLeft(const char *pstr1, const char *pstr2)
 {
     int i = 0, j = 0;
@@ -67,3 +65,5 @@ int myStrcmpFromRight(const char *pstr1, const char *pstr2)
 
     return pstr1[i] - pstr2[j];
 }
+
+

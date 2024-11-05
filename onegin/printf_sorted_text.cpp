@@ -4,45 +4,43 @@
 #include "printf_sorted_text.h"
 
 
-void oneginSortedFileFromLeft(char **str, size_t SIZE)
+void oneginSortedFileFromLeft(const FileData *file_data)
 {
     FILE *fp = fopen("onegin_sorted_from_left.txt", "w");
     assert(fp != NULL);
-    for (size_t j = 0; j < SIZE; j++)
+    for (size_t j = 0; j < file_data->SIZE; j++)
     {
-        fprintf(fp, "%s\n", str[j]);
+        fprintf(fp, "%s\n", file_data->lines[j]);
     }
     fclose(fp);
 }
 
-void oneginSortedFileFromRight(char **str, size_t SIZE)
+void oneginSortedFileFromRight(const FileData *file_data)
 {
     FILE *fp = fopen("onegin_sorted_from_right.txt", "w");
     assert(fp != NULL);
-    for (size_t j = 0; j < SIZE; j++)
+    for (size_t j = 0; j < file_data->SIZE; j++)
     {
-        fprintf(fp, "%s\n", str[j]);
+        fprintf(fp, "%s\n", file_data->lines[j]);
     }
     fclose(fp);
 }
 
-void printfSortedTextFromRight(char **str, size_t SIZE)
+void printfSortedTextFromRight(const FileData *file_data)
 {
     puts("Отсортированный текст from right:\n");
-    for (size_t j = 0; j < SIZE; j++)
+    for (size_t j = 0; j < file_data->SIZE; j++)
     {
-        printf("%s\n", str[j]);
+        printf("%s\n", file_data->lines[j]);
     }
     putchar('\n');
 }
 
-void printfSortedText(char **str, size_t SIZE)
+void printfSortedText(const FileData *file_data)
 {
     puts("Отсортированный текст from left:\n");
-    for (size_t j = 0; j < SIZE; j++)
+    for (size_t j = 0; j < file_data->SIZE; j++)
     {
-        printf("%s\n", str[j]);
-        free(str[j]);
+        printf("%s\n", file_data->lines[j]);
     }
-    free(str);
 }

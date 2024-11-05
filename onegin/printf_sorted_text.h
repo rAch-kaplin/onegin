@@ -1,5 +1,17 @@
-void oneginSortedFileFromLeft(char **str, size_t SIZE);
-void printfSortedText(char **str, size_t SIZE);
+#ifndef _HPRINTF_SORTED_TEXT
+#define _HPRINTF_SORTED_TEXT
 
-void oneginSortedFileFromRight(char **str, size_t SIZE);
-void printfSortedTextFromRight(char **str, size_t SIZE);
+#include "read_file.h"
+
+// typedef struct
+// {
+//     char **lines;
+//     size_t SIZE;
+// } FileData;
+
+void oneginSortedFileFromLeft(const FileData *file_data);
+void printfSortedText(const FileData *file_data);
+void oneginSortedFileFromRight(const FileData *file_data);
+void printfSortedTextFromRight(const FileData *file_data);
+
+#endif
