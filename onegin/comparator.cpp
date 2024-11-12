@@ -29,7 +29,7 @@ int mySrtcmpFromLeft(const char *pstr1, const char *pstr2)
     return pstr1[i] - pstr2[j];
 }
 
-int myStrcmpFromRight(const char *pstr1, const char *pstr2)
+int myStrcmpFromRight(const char *pstr1, const char *pstr2) //TODO: struct element
 {
     size_t i = strlen(pstr1) - 1, j = strlen(pstr2) - 1;
 
@@ -38,19 +38,14 @@ int myStrcmpFromRight(const char *pstr1, const char *pstr2)
         while (!isalnum((unsigned char)pstr1[i]))
         {
             i--;
-            //fprintf(stderr, "i = %zu ", i);
         }
 
         while (!isalnum((unsigned char)pstr2[j]))
         {
             j--;
-            //fprintf(stderr, "j = %zu ", j);
         }
 
-        if (i == 0 && j == 0)
-            break;
-
-        if ((i == 0 && j != 0) || (j == 0 && i != 0))
+        if (i == 0 || j == 0)
             break;
 
         char ch1 = (char)tolower((unsigned char)pstr1[i]);

@@ -4,11 +4,6 @@
 #include "read_file.h"
 #include "comparator.h"
 
-// typedef struct
-// {
-//     char **lines;
-//     size_t SIZE;
-// } FileData;
 
 void swap(char ** str1, char **str2);
 void bubbleSort(const FileData *file_data, int (*sort)(const char *, const char *));

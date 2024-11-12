@@ -3,11 +3,6 @@
 
 #include "read_file.h"
 
-// typedef struct
-// {
-//     char **lines;
-//     size_t SIZE;
-// } FileData;
 
 void oneginSortedFileFromLeft(const FileData *file_data);
 void printfSortedText(const FileData *file_data);

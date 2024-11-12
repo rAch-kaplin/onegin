@@ -14,13 +14,13 @@ void fileSize(FILE *file, size_t *size_of_file)
     fseek(file, current_position, SEEK_SET);
 }
 
-void readFile(char **file_content, FileData *file_data)
+codeError readFile(char **file_content, FileData *file_data)
 {
     FILE * file = fopen("onegin.txt", "r");
     if (file == NULL)
     {
         fprintf(stderr, "Failed to open file\n");
-        //return -1;
+        return FAILED_OPEN_FILE;
     }
 
     size_t size_of_file = 0;
@@ -32,13 +32,13 @@ void readFile(char **file_content, FileData *file_data)
     if (*file_content == NULL)
     {
         fprintf(stderr, "Memory allocation error\n");
-        //return -2;
+        return MEMORY_ALLOCATION_ERROR;
     }
 
     if (fread(*file_content, sizeof(char), size_of_file, file) != size_of_file)
     {
         fprintf(stderr, "File read error\n");
-        //return -3;
+        return FILE_READ_ERROR;
     }
     fclose(file);
 
@@ -55,7 +55,12 @@ void readFile(char **file_content, FileData *file_data)
     printf("nStrings = %zu\n", file_data->size);
 
     file_data->lines = (char**)calloc(file_data->size + 1, sizeof(char*));
-    assert(file_data->lines != NULL);
+    if (file_data->lines == NULL)
+    {
+        fprintf(stderr, "Memory allocation error\n");
+        return MEMORY_ALLOCATION_ERROR;
+    }
+
 
     size_t line_index = 0;
     (file_data->lines)[line_index++] = *file_content;
@@ -64,6 +69,7 @@ void readFile(char **file_content, FileData *file_data)
         if ((*file_content)[i] == '\0' && i + 1 < size_of_file)
             (file_data->lines)[line_index++] = &(*file_content)[i + 1];
     }
+    return NO_ERROR;
 }
 
 void resultOfReadFile(const FileData *file_data)
