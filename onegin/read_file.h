@@ -1,10 +1,11 @@
 #ifndef _HREAD_FILE
 #define _HREAD_FILE
 #include <stdio.h>
+#include "comparator.h"
 
 typedef struct
 {
-    char **lines;
+    StringElement *lines;
     size_t size;
 } FileData;
 

@@ -10,7 +10,7 @@ void oneginSortedFileFromLeft(const FileData *file_data)
     assert(fp != NULL);
     for (size_t j = 0; j < file_data->size; j++)
     {
-        fprintf(fp, "%s\n", file_data->lines[j]);
+        fprintf(fp, "%s\n", file_data->lines[j].str);
     }
     fclose(fp);
 }
@@ -21,7 +21,7 @@ void oneginSortedFileFromRight(const FileData *file_data)
     assert(fp != NULL);
     for (size_t j = 0; j < file_data->size; j++)
     {
-        fprintf(fp, "%s\n", file_data->lines[j]);
+        fprintf(fp, "%s\n", file_data->lines[j].str);
     }
     fclose(fp);
 }
@@ -31,7 +31,7 @@ void printfSortedTextFromRight(const FileData *file_data)
     puts("Отсортированный текст from right:\n");
     for (size_t j = 0; j < file_data->size; j++)
     {
-        printf("%s\n", file_data->lines[j]);
+        printf("%s\n", file_data->lines[j].str);
     }
     putchar('\n');
 }
@@ -41,6 +41,6 @@ void printfSortedText(const FileData *file_data)
     puts("Отсортированный текст from left:\n");
     for (size_t j = 0; j < file_data->size; j++)
     {
-        printf("%s\n", file_data->lines[j]);
+        printf("%s\n", file_data->lines[j].str);
     }
 }

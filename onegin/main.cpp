@@ -23,6 +23,8 @@ int main()
     {
         switch (error)
         {
+            case NO_ERROR:
+                break;
             case FAILED_OPEN_FILE: fprintf(stderr, "Failed open file\n");
                 break;
             case MEMORY_ALLOCATION_ERROR: fprintf(stderr, "MEMORY_ALLOCATION_ERROR\n");

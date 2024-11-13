@@ -4,6 +4,7 @@
 #include <string.h>
 #include <assert.h>
 #include "read_file.h"
+#include "comparator.h"
 
 void fileSize(FILE *file, size_t *size_of_file)
 {
@@ -54,31 +55,39 @@ codeError readFile(char **file_content, FileData *file_data)
 
     printf("nStrings = %zu\n", file_data->size);
 
-    file_data->lines = (char**)calloc(file_data->size + 1, sizeof(char*));
+    file_data->lines = (StringElement*)calloc(file_data->size + 1, sizeof(StringElement));
     if (file_data->lines == NULL)
     {
         fprintf(stderr, "Memory allocation error\n");
         return MEMORY_ALLOCATION_ERROR;
     }
 
-
     size_t line_index = 0;
-    (file_data->lines)[line_index++] = *file_content;
+    size_t start_new_line = 0;
+
+    (file_data->lines)[line_index++].str = *file_content;
     for (size_t i = 0; i < size_of_file; i++) // strchr
     {
         if ((*file_content)[i] == '\0' && i + 1 < size_of_file)
-            (file_data->lines)[line_index++] = &(*file_content)[i + 1];
+        {
+            (file_data->lines)[line_index].str = &(*file_content)[i + 1];
+            (file_data->lines)[line_index].len = i - 1 - start_new_line;
+
+            fprintf(stderr, COLOR_RED "len = %zu\n" COLOR_RESET, (file_data->lines)[line_index].len);
+
+            start_new_line = i + 1;
+            line_index++;
+        }
     }
     return NO_ERROR;
 }
 
 void resultOfReadFile(const FileData *file_data)
 {
-    printf("size = <<%zu>>\n\n", file_data->size);
     puts("Содержимое считанного файла:\n");
     for (size_t j = 0; j < file_data->size; j++)
     {
-        printf("---%s\n", file_data->lines[j]);
+        printf("---%s\n", file_data->lines[j].str);
     }
     putchar('\n');
 }
