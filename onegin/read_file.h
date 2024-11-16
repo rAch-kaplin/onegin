@@ -6,7 +6,7 @@
 typedef struct
 {
     StringElement *lines;
-    size_t size;
+    size_t size;    
 } FileData;
 
 enum codeError

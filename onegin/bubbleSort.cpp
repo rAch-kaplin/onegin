@@ -8,7 +8,8 @@ void swap(StringElement *str1, StringElement *str2)
     *str2 = buffer;
 }
 
-void bubbleSort(const FileData *file_data, int (*sort)(const StringElement *, const StringElement *)) //TODO: привести к прототипу qsort
+void bubbleSort(const FileData *file_data, int (*sort)(const StringElement *, const StringElement *))
+//void bubbleSort(StringElement*, FileData *file_data, size_t size, int (*sort)(const StringElement *, const StringElement *))//TODO: привести к прототипу qsort
 {
     for (size_t i = 0; i < file_data->size - 1; i++)
     {

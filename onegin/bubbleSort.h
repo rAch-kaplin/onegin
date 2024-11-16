@@ -6,5 +6,6 @@
 
 void swap(StringElement *str1, StringElement *str2);
 void bubbleSort(const FileData *file_data, int (*sort)(const StringElement *, const StringElement *));
+//void bubbleSort(StringElement*, FileData *file_data, size_t size, int (*sort)(const StringElement *, const StringElement *));
 
 #endif

@@ -66,7 +66,7 @@ codeError readFile(char **file_content, FileData *file_data)
     size_t start_new_line = 0;
 
     (file_data->lines)[line_index++].str = *file_content;
-    for (size_t i = 0; i < size_of_file; i++) // strchr
+    for (size_t i = 0; i < size_of_file; i++) //TODO: strchr
     {
         if ((*file_content)[i] == '\0' && i + 1 < size_of_file)
         {

@@ -32,7 +32,7 @@ int main()
             case FILE_READ_ERROR: fprintf(stderr, "FILE_READ_ERROR\n");
                 break;
             default:
-                fprintf(stderr, "Unknow error occurred\n");
+                fprintf(stderr, "Unknow error   occurred\n");
         }
 
     }
